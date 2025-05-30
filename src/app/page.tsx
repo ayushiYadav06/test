@@ -25,6 +25,8 @@ export default function HomePage() {
         data.verification_status &&
         data.request_id
       ) {
+                console.log("Callback data received:", data);
+
         if (data.verification_status === "verification.accepted") {
           alert("✅ Verification Accepted!");
 
