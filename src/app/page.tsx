@@ -28,9 +28,9 @@ export default function HomePage() {
       ) {
         console.log("Callback data received:", data);
         if (data.verification_status === "verification.accepted") {
-          alert("✅ Verification Accepted!");
-
-
+         
+window.location.href = "https://www.digicelgroup.com/en";
+ alert("✅ Verification Accepted!");
         } else if (data.verification_status === "verification.declined") {
           alert("❌ Verification Declined.");
         }
@@ -156,7 +156,7 @@ export default function HomePage() {
       "reference": "digicel-12323234324",
       "email": "example@example.com",
       "language": "EN",
-      "redirect_url": "https://digicel.com",
+      "redirect_url": "https://www.digicelgroup.com/en",
       "allow_warnings":"1",
       "ttl": 60,
       "verification_mode": "any",
