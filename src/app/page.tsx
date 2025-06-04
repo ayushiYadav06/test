@@ -35,6 +35,7 @@ export default function HomePage() {
       ) {
         console.log("Callback data received:", data);
         if (data.verification_status === "verification.accepted") {
+          console.log("logged",data)
           handleStatusOfVerification();
         } else if (data.verification_status === "verification.declined") {
           alert("❌ Verification Declined.");
@@ -47,6 +48,7 @@ export default function HomePage() {
 
  
   const handleStatusOfVerification = async () => {
+    console.log("logged")
     try {
       const payload = {
         reference: reference,
@@ -84,7 +86,6 @@ export default function HomePage() {
       "reference": newReference,
       "email": "example@example.com",
       "language": "EN",
-      "redirect_url": "https://digicel.com",
       "allow_warnings":"1",
       "ttl": 60,
       "verification_mode": "any",
