@@ -18,27 +18,21 @@ export default function HomePage() {
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       const data = event.data;
-
+      console.log("event fetched",event)
+      console.log("event data",data)
       if (
         data &&
         typeof data === "object" &&
         data.verification_status &&
         data.request_id
       ) {
-                console.log("Callback data received:", data);
-
+        console.log("Callback data received:", data);
         if (data.verification_status === "verification.accepted") {
           alert("✅ Verification Accepted!");
 
-          // Open the redirect URL in a new window
-          const redirectUrl = `/verification-result?status=accepted&request_id=${data.request_id}`;
-          window.open(redirectUrl, "_blank"); // Opens in a new tab or window
+
         } else if (data.verification_status === "verification.declined") {
           alert("❌ Verification Declined.");
-
-          // Open the decline page or another URL in a new window
-          const redirectUrl = `/verification-result?status=declined&request_id=${data.request_id}`;
-          window.open(redirectUrl, "_blank"); // Opens in a new tab or window
         }
       }
     };
@@ -131,33 +125,58 @@ export default function HomePage() {
     //     },
     //   },
     // };
-    const payload = {
+    // const payload = {
 
-        reference:"56834266643567",
-      document: {
-        proof: "",
-        supported_types: ["id_card", "driving_license", "passport"],
-        name: {
-          "first_name": "",
-          "last_name": ""
-        },
-        additional_proof: "",
-        dob: "",
-        age: "",
-        issue_date: "",
-        expiry_date: "",
-        document_number: "",
-        allow_offline: "1",
-        allow_online: "1",
-        fetch_enhanced_data: "1",
-        backside_proof_required: "0",
-        verification_mode: "any",
-        gender: "",
-        show_ocr_form: "1",
-        nationality: ""
+    //     reference:"5689876543567",
+    //   document: {
+    //     proof: "",
+    //     supported_types: ["id_card", "driving_license", "passport"],
+    //     name: {
+    //       "first_name": "",
+    //       "last_name": ""
+    //     },
+    //     additional_proof: "",
+    //     dob: "",
+    //     age: "",
+    //     issue_date: "",
+    //     expiry_date: "",
+    //     document_number: "",
+    //     allow_offline: "1",
+    //     allow_online: "1",
+    //     fetch_enhanced_data: "1",
+    //     backside_proof_required: "0",
+    //     verification_mode: "any",
+    //     gender: "",
+    //     show_ocr_form: "1",
+    //     nationality: ""
       
+    // }
+    // }
+    const payload = {
+      "reference": "digicel-12323234324",
+      "email": "example@example.com",
+      "language": "EN",
+      "redirect_url": "https://digicel.com",
+      "allow_warnings":"1",
+      "ttl": 60,
+      "verification_mode": "any",
+    
+      "document": {
+        "proof": "",
+        "additional_proof": "",
+        "supported_types": ["id_card", "driving_license", "passport"],
+        "name": "",
+        "dob": "",
+        "age": "",
+        "issue_date": "",
+        "expiry_date": "",
+        "document_number": "",
+        "allow_offline": "1",
+        "allow_online": "1",
+        "gender": ""
+      }
     }
-    }
+
 
     try {
       const response = await axios.post(
