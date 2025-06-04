@@ -14,6 +14,13 @@ export default function HomePage() {
   const [data, setData] = useState({ email: "", firstName: "", lastName: "" });
   const [verificationUrl, setVerificationUrl] = useState("");
   const [callbackData, setCallbackData] = useState<any>(null); // Store callback data
+  const [reference, setReference] = useState<string>("");
+
+
+  const clientId = "FgK49GpGTvjEkKWoqp7q8670XarUWFqtI8l7bp53g3o4B7Tny41669897952";
+  const secretKey = "$2y$10$Va.Ep7XgK27hs6N2ncnDGe41Cqu7RUkxSYQHphnnDCqPLnmxYYJNO";
+  const authToken = btoa(`${clientId}:${secretKey}`);
+
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
@@ -28,37 +35,41 @@ export default function HomePage() {
       ) {
         console.log("Callback data received:", data);
         if (data.verification_status === "verification.accepted") {
-         
-window.location.href = "https://www.digicelgroup.com/en";
- alert("✅ Verification Accepted!");
+          handleStatusOfVerification();
         } else if (data.verification_status === "verification.declined") {
           alert("❌ Verification Declined.");
         }
       }
     };
-
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
-  }, []);
+  }, [reference]);
 
-  // useEffect(() => {
-  //   const eventSource = new EventSource("https://digicel.requestcatcher.com/");
+ 
+  const handleStatusOfVerification = async () => {
+    try {
+      const payload = {
+        reference: reference,
+      };
 
-  //   eventSource.onmessage = (event) => {
-  //     const data = JSON.parse(event.data);
-  //     console.log("Callback received via SSE:", data);
-  //     setCallbackData(data); // Update state
-  //   };
+      const response = await axios.post(
+        "https://api.shuftipro.com/status",
+        JSON.stringify(payload),
+        {
+          headers: {
+            Authorization: "Basic " + authToken,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-  //   eventSource.onerror = (err) => {
-  //     console.error("SSE error:", err);
-  //     eventSource.close();
-  //   };
+      console.log("Shufti Pro Status Response:", response.data);
+      
+    } catch (error: any) {
+      console.error("Shufti Status API Error:", error.response?.data || error.message);
+    }
+  };
 
-  //   return () => eventSource.close(); // Clean up on unmount
-  // }, []);
-
-  console.log("===========>",callbackData)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
@@ -66,97 +77,14 @@ window.location.href = "https://www.digicelgroup.com/en";
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const clientId =
-      "FgK49GpGTvjEkKWoqp7q8670XarUWFqtI8l7bp53g3o4B7Tny41669897952";
-    const secretKey =
-      "$2y$10$Va.Ep7XgK27hs6N2ncnDGe41Cqu7RUkxSYQHphnnDCqPLnmxYYJNO";
-    const authToken = btoa(`${clientId}:${secretKey}`);
-
-    // const payload = {
-    //   reference: `ref-${Date.now()}`,
-    //   country: "",
-    //   language: "en",
-    //   callback_url: "https://digicel.requestcatcher.com/",
-    //   redirect_url: "https://digicel.requestcatcher.com/",
-    //   verification_mode: "any",
-    //   email: data.email,
-    //   allow_offline: "1",
-    //   allow_online: "1",  
-    //   show_consent: "1",
-    //   decline_on_single_step: "1",
-    //   manual_review: "0",
-    //   show_privacy_policy: "0",
-    //   show_results: "0",
-    //   show_feedback_form: "0",
-    //   allow_na_ocr_inputs: "0",
-    //   allow_retry: "0",
-    //   ttl: 60,
-    //   enhanced_originality_checks: "0",
-    //   document: {
-    //     proof: "",
-    //     additional_proof: "",
-    //     supported_types: ["id_card", "driving_license", "passport"],
-    //     backside_proof_required: "0",
-    //     allow_ekyc: "0",
-    //     verification_instructions: {
-    //       allow_paper_based: "1",
-    //       allow_photocopy: "1",
-    //       allow_laminated: "1",
-    //       allow_screenshot: "1",
-    //       allow_cropped: "1",
-    //       allow_scanned: "1",
-    //     },
-    //     verification_mode: "any",
-    //     fetch_enhanced_data: "1",
-    //     name: {
-    //       first_name: "",
-    //       middle_name: "",
-    //       last_name: "",
-    //       fuzzy_match: "1",
-    //     },
-    //     dob: "",
-    //     issue_date: "",
-    //     expiry_date: "",
-    //     document_number: "",
-    //     gender: "",
-    //     age: {
-    //       min: "18",
-    //       max: "70",
-    //     },
-    //   },
-    // };
-    // const payload = {
-
-    //     reference:"5689876543567",
-    //   document: {
-    //     proof: "",
-    //     supported_types: ["id_card", "driving_license", "passport"],
-    //     name: {
-    //       "first_name": "",
-    //       "last_name": ""
-    //     },
-    //     additional_proof: "",
-    //     dob: "",
-    //     age: "",
-    //     issue_date: "",
-    //     expiry_date: "",
-    //     document_number: "",
-    //     allow_offline: "1",
-    //     allow_online: "1",
-    //     fetch_enhanced_data: "1",
-    //     backside_proof_required: "0",
-    //     verification_mode: "any",
-    //     gender: "",
-    //     show_ocr_form: "1",
-    //     nationality: ""
-      
-    // }
-    // }
+    const newReference = `digicel-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    setReference(newReference);
+ 
     const payload = {
-      "reference": "digicel-1232674324",
+      "reference": newReference,
       "email": "example@example.com",
       "language": "EN",
-      "redirect_url": "https://www.digicelgroup.com/en",
+      "redirect_url": "https://digicel.com",
       "allow_warnings":"1",
       "ttl": 60,
       "verification_mode": "any",
