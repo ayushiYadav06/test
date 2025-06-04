@@ -153,7 +153,7 @@ window.location.href = "https://www.digicelgroup.com/en";
     // }
     // }
     const payload = {
-      "reference": "digicel-12323234324",
+      "reference": "digicel-1232674324",
       "email": "example@example.com",
       "language": "EN",
       "redirect_url": "https://www.digicelgroup.com/en",
